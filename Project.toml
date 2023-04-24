@@ -1,5 +1,5 @@
 name = "XDMFFileHandler"
-uuid = "6e9f8158-41af-4c42-b493-3202dfdd0db4"
+uuid = "b0b32849-8088-4a6a-980f-ce3b511736e4"
 license = "MIT"
 authors = ["Maximilian Bittens <maximilian.bittens@bgr.de>"]
 version = "0.0.1"
