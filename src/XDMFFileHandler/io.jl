@@ -1,4 +1,4 @@
-function Base.write(vtufile::VTUFile)
+function Base.write(xdmf3f::XDMF3File)
 	update_xml!(vtufile)
 	name = vtufile.name
 	if add_timestamp
