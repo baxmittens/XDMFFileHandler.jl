@@ -66,9 +66,10 @@ function extract_data(h5file::String, h5path::String)
 		if keyword ∈ allkeys
 			tmp = read(fid,h5path*keyword)
 			push!(idat.names,keyword)
-			push!(idat.fields,XDMFDataField(tmp))
+			push!(idat.fields,XDMFDataField(deepcopy(tmp)))
 		end
 	end
+	close(fid)
 	return idat
 end
 
