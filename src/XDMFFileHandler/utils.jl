@@ -29,7 +29,7 @@ function Base.similar(xdmf3f::XDMF3File)
 	return ret
 end
 
-function Base.fill!(datf::XDMFDataField{T,N}) where {T,N}
+function Base.fill!(datf::XDMFDataField{T,N}, c::Float64) where {T,N}
 	fill!(datf.dat,c)
 	return nothing
 end
@@ -48,13 +48,13 @@ end
 
 function Base.zero(datf::XDMFDataField{T,N}) where {T,N}
 	ret = similar(datf)
-	fill!(ret,0.0)
+	fill!(ret,zero(T))
 	return ret
 end
 
 function Base.zero(dat::XDMFData)
 	ret = similar(dat)
-	fill!(ret,0.0)
+	fill!(ret,0.0) #todo add zero methods
 	return ret
 end
 
