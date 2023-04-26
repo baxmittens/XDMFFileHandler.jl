@@ -42,7 +42,7 @@ function Base.fill!(dat::XDMFData, c::Float64)
 end
 
 function Base.fill!(xdmf3f::XDMF3File, c::Float64)
-	fill!(ret.idata,c)
+	fill!(xdmf3f.idata,c)
 	return nothing
 end
 
