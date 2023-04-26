@@ -1,66 +1,66 @@
-function add!(zd1::XDMF3DataField{T,N}, zd2::XDMF3DataField{T,N}) where {T,N}
+function add!(zd1::XDMFDataField{T,N}, zd2::XDMFDataField{T,N}) where {T,N}
 	zd1.dat .+= zd2.dat
 	return nothing
 end
 
-function minus!(zd1::XDMF3DataField{T,N}, zd2::XDMF3DataField{T,N}) where {T,N}
+function minus!(zd1::XDMFDataField{T,N}, zd2::XDMFDataField{T,N}) where {T,N}
 	zd1.dat .-= zd2.dat
 	return nothing
 end
 
-function add!(zd1::XDMF3DataField{T,N}, a::Number) where {T,N}
+function add!(zd1::XDMFDataField{T,N}, a::Number) where {T,N}
 	zd1.dat .+= a
 	return nothing
 end
 
-function mul!(zd1::XDMF3DataField{T,N}, c::Number) where {T,N}
+function mul!(zd1::XDMFDataField{T,N}, c::Number) where {T,N}
 	zd1.dat .*= c
 	return nothing
 end
 
-function mul!(zd1::XDMF3DataField{T,N}, zd2::XDMF3DataField{T,N}, zd3::XDMF3DataField{T,N}) where {T,N}
+function mul!(zd1::XDMFDataField{T,N}, zd2::XDMFDataField{T,N}, zd3::XDMFDataField{T,N}) where {T,N}
 	@inbounds for i in 1:length(zd1.dat)
 		zd1.dat[i] = zd2.dat[i] * zd3.dat[i]
 	end
 	return nothing
 end
 
-function mul!(zd1::XDMF3DataField{T,N}, zd2::XDMF3DataField{T,N}, fac::Float64) where {T,N}
+function mul!(zd1::XDMFDataField{T,N}, zd2::XDMFDataField{T,N}, fac::Float64) where {T,N}
 	@inbounds for i in 1:length(zd1.dat)
 		zd1.dat[i] = zd2.dat[i] * fac
 	end
 	return nothing
 end
 
-function pow!(zd1::XDMF3DataField{T,N}, a::Number) where {T,N}
+function pow!(zd1::XDMFDataField{T,N}, a::Number) where {T,N}
 	@inbounds for i in 1:length(zd1.dat)
 		zd1.dat[i] ^= a
 	end
 	return nothing
 end
 
-function div!(zd1::XDMF3DataField{T,N}, a::Number) where {T,N}
+function div!(zd1::XDMFDataField{T,N}, a::Number) where {T,N}
 	@inbounds for i in 1:length(zd1.dat)
 		zd1.dat[i] /= a
 	end
 	return nothing
 end
 
-function max!(zd1::XDMF3DataField{T,N}, zd2::XDMF3DataField{T,N}) where {T,N}
+function max!(zd1::XDMFDataField{T,N}, zd2::XDMFDataField{T,N}) where {T,N}
 	@inbounds for i in 1:length(zd1.dat)
 		zd1.dat[i] = max(zd1.dat[i],zd2.dat[i])
 	end
 	return nothing
 end
 
-function min!(zd1::XDMF3DataField{T,N}, zd2::XDMF3DataField{T,N}) where {T,N}
+function min!(zd1::XDMFDataField{T,N}, zd2::XDMFDataField{T,N}) where {T,N}
 	@inbounds for i in 1:length(zd1.dat)
 		zd1.dat[i] = min(zd1.dat[i],zd2.dat[i])
 	end
 	return nothing
 end
 
-function norm(zd::XDMF3DataField{T,N}) where {T,N}
+function norm(zd::XDMFDataField{T,N}) where {T,N}
 	return norm(zd.dat)
 end
 
