@@ -1,6 +1,7 @@
 module XDMFFileHandler
 
 using XMLParser
+using HDF5
 
 import LinearAlgebra: mul!, norm
 import Base: +,-,*,/,^,<=
