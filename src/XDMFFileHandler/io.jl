@@ -37,7 +37,7 @@ function Base.write(xdmf3f::XDMF3File, name::String)
 	@assert length(splitpath(name))==1 && split(name,".")[end] == "xdmf"
 	timest = timestamp()
 	newh5 = split(xdmf3f.h5file,".")[1]*timest*".h5"
-	create_and_update_hdf5!(xdmf3f)
+	create_and_update_hdf5!(xdmf3f, newh5)
 	update_xml!(xdmf3f,newh5)
 	return write(joinpath(xdmf3f.path,name), vtufile.xmlfile)
 end
