@@ -10,14 +10,14 @@ import AltInplaceOpsInterface: add!, minus!, pow!, max!, min!
 #uncompress_keywords = ["geometry","topology","MaterialIDs"]
 interpolation_keywords = ["displacement","epsilon","pressure_interpolated","sigma","temperature_interpolated"]
 
-struct XDMF3DataField{T,N}
+struct XDMFDataField{T,N}
 	dat::Array{T,N}
 end
 
-struct XDMF3Data
+struct XDMFData
 	names::Vector{String}
-	fields::Vector{XDMF3DataField}
-	XDMF3Data() = new(Vector{String}(), Vector{XDMF3DataField}())
+	fields::Vector{XDMFDataField}
+	XDMF3Data() = new(Vector{String}(), Vector{XDMFDataField}())
 end
 
 struct XDMF3File
@@ -27,7 +27,7 @@ struct XDMF3File
 	h5file::String
 	h5path::String
 	dataitems::Vector{XMLElement}
-	idata::XDMF3Data
+	idata::XDMFData
 	#udata::XDMF3Data
 	overwrite::Bool
 end
@@ -58,14 +58,14 @@ end
 function extract_data(h5file::String, h5path::String)
 	fid = h5open(h5file, "r")
 	names = Vector{String}()
-	fields = Vector{XDMF3DataField}()
+	fields = Vector{XDMFDataField}()
 	allkeys = keys(fid[h5path])
-	idat = XDMF3Data()
+	idat = XDMFData()
 	for keyword in interpolation_keywords
 		if keyword ∈ allkeys
 			tmp = read(fid,h5path*keyword)
 			push!(idat.names,keyword)
-			push!(idat.fields,XDMF3DataField(tmp))
+			push!(idat.fields,XDMFDataField(tmp))
 		end
 	end
 	return idat
@@ -79,6 +79,10 @@ function XDMF3File(filename::String, overwrite=false)
 	idata = extract_data(h5file, h5path)
 	return XDMF3File(filename,xmlfile, xmlroot, h5file, h5path, dataitems, idata, overwrite)
 end
+
+include("./XDMFFileHandler/utils.jl")
+include("./XDMFFileHandler/math.jl")
+include("./XDMFFileHandler/io.jl")
 
 export XDMF3File, getH5Path
 
