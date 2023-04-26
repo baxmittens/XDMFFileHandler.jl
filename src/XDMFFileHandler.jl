@@ -2,11 +2,109 @@ module XDMFFileHandler
 
 using XMLParser
 
+import LinearAlgebra: mul!, norm
+import Base: +,-,*,/,^,<=
+import AltInplaceOpsInterface: add!, minus!, pow!, max!, min!
+
+#uncompress_keywords = ["geometry","topology","MaterialIDs"]
 interpolation_keywords = ["displacement","epsilon","pressure_interpolated","sigma","temperature_interpolated"]
+
+struct XDMF3DataField{T,N}
+	dat::Array{T,N}
+end
+
+struct XDMF3Data
+	names::Vector{String}
+	fields::Vector{XDMF3DataField}
+	XDMF3Data() = new(Vector{String}(), Vector{XDMF3DataField}())
+end
 
 struct XDMF3File
 	name::String
+	xmlfile::XMLFile
 	xmlroot::XMLElement
+	h5file::String
+	h5path::String
+	dataitems::Vector{XMLElement}
+	idata::XDMF3Data
+	#udata::XDMF3Data
+	overwrite::Bool
 end
 
+function correct_time_steps!(xdmf::XDMF3File)
+	h5file,xmlroot = xdmf.h5file,xdmf.xmlroot
+	fid = h5open(h5file, "r")
+	times = read(fid, "times")
+	timeels = getElements(xmlroot, "Time")
+	for (t,el) in zip(times,timeels)
+		el.tag.attributes[1].val = string(t)
+	end
+	close(fid)
+	return nothing
+end
+
+function getH5Pathes(xmlroot::XMLElement)
+	attr = getElements(xmlroot,"Attribute")[1]
+	name = getAttribute(attr,"Name")
+	dit = getElements(attr,"DataItem")[1]
+	fullpath = split(dit.content[1],name)[1]
+	pathes = split(fullpath,":")
+	h5file =  string(pathes[1])
+	h5path =  string(pathes[2])
+	return h5file,h5path
+end
+
+function extract_data(h5file::String, h5path::String)
+	fid = h5open(h5file, "r")
+	names = Vector{String}()
+	fields = Vector{XDMF3DataField}()
+	allkeys = keys(fid[h5path])
+	idat = XDMF3Data()
+	for keyword in interpolation_keywords
+		if keyword ∈ allkeys
+			tmp = read(fid,h5path*keyword)
+			push!(idat.names,keyword)
+			push!(idat.fields,XDMF3DataField(tmp))
+		end
+	end
+	return idat
+end
+
+function XDMF3File(filename::String, overwrite=false)
+	xmlfile = read(XMLFile, filename)
+	xmlroot = xmlfile.element
+	dataitems = getElements(xmlroot,"DataItem")
+	h5file,h5path = getH5Pathes(xmlroot)
+	idata = extract_data(h5file, h5path)
+	return XDMF3File(filename,xmlfile, xmlroot, h5file, h5path, dataitems, idata, overwrite)
+end
+
+export XDMF3File, getH5Path
+
 end #module
+
+
+#using XMLParser
+#using XDMFFileHandler
+#using HDF5
+##using FileIO
+#
+#filename = "test_THM_Ansicht_II_T1_grob_quadratic.xdmf"
+#xmlfile = read(XMLFile, filename)
+#xmlroot = xmlfile.element
+#dataitems = getElements(xmlroot,"DataItem")
+#h5file = split(dataitems[1].content[1],".h5")[1]*".h5"
+#times = read(fid,"times")
+#h5path = getH5Path(xmlroot)
+#
+#fid = h5open(h5file, "r+")
+#temps = read(fid,"meshes/Ansicht_II_T1_grob_quadratic/temperature_interpolated")
+#
+#
+#timeels = getElements(xmlroot,"Time")
+#
+#for (t,el) in zip(times,timeels)
+#	el.tag.attributes[1].val = string(t)
+#end
+#
+#write("test_THM_Ansicht_II_T1_grob_quadratic_times.xdmf", xmlfile)
