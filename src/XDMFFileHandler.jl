@@ -21,7 +21,7 @@ struct XDMFData
 	XDMFData() = new(Vector{String}(), Vector{XDMFDataField}())
 end
 
-struct XDMF3File
+mutable struct XDMF3File
 	name::String
 	path::String
 	xmlfile::XMLFile
