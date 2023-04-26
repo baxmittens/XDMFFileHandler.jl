@@ -3,6 +3,7 @@ module XDMFFileHandler
 using XMLParser
 using HDF5
 
+import Dates
 import LinearAlgebra: mul!, norm
 import Base: +,-,*,/,^,<=
 import AltInplaceOpsInterface: add!, minus!, pow!, max!, min!
