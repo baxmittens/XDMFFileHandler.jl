@@ -73,8 +73,14 @@ function extract_data(h5file::String, h5path::String)
 end
 
 function XDMF3File(filename::String, overwrite=false)
-	path = joinpath(splitpath(filename)[1:end-1])
-	name = splitpath(filename)[end]
+	_splitpath = splitpath(filename)
+	if length(_splitpath) > 1
+		path = joinpath([1:end-1])	
+		name = splitpath(filename)[end]
+	else
+		path = "./"
+		name = filename
+	end
 	xmlfile = read(XMLFile, filename)
 	xmlroot = xmlfile.element
 	dataitems = getElements(xmlroot,"DataItem")
