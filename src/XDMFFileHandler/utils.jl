@@ -5,7 +5,7 @@ function timestamp()
 	str = replace(str,"."=>"_")
 end
 
-function rename!(vtuf::VTUFile,name::String)
+function rename!(xdmf3f::XDMF3File,name::String)
 	vtuf.name = name
 	return nothing
 end
