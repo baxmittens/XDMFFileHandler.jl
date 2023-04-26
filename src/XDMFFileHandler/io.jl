@@ -41,5 +41,5 @@ function Base.write(xdmf3f::XDMF3File, name::String)
 	newh5 = split(xdmf3f.h5file,".")[1]*timest*".h5"
 	create_and_update_hdf5!(xdmf3f, newh5)
 	update_xml!(xdmf3f,newh5)
-	return write(joinpath(xdmf3f.path,name), vtufile.xmlfile)
+	return write(joinpath(xdmf3f.path,name), xdmf3f.xmlfile)
 end
