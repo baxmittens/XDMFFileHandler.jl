@@ -33,18 +33,6 @@ struct XDMF3File
 	overwrite::Bool
 end
 
-function correct_time_steps!(xdmf::XDMF3File)
-	h5file,xmlroot = xdmf.h5file,xdmf.xmlroot
-	fid = h5open(h5file, "r")
-	times = read(fid, "times")
-	timeels = getElements(xmlroot, "Time")
-	for (t,el) in zip(times,timeels)
-		el.tag.attributes[1].val = string(t)
-	end
-	close(fid)
-	return nothing
-end
-
 function getH5Pathes(xmlroot::XMLElement)
 	attr = getElements(xmlroot,"Attribute")[1]
 	name = getAttribute(attr,"Name")

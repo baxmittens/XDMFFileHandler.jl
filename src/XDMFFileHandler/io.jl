@@ -11,7 +11,20 @@ function create_and_updata_hdf5!(xdmf3f::XDMF3File, newh5::String)
 	return nothing
 end
 
+function correct_time_steps!(xdmf::XDMF3File)
+	h5file,xmlroot = xdmf.h5file,xdmf.xmlroot
+	fid = h5open(h5file, "r")
+	times = read(fid, "times")
+	timeels = getElements(xmlroot, "Time")
+	for (t,el) in zip(times,timeels)
+		el.tag.attributes[1].val = string(t)
+	end
+	close(fid)
+	return nothing
+end
+
 function update_xml!(xdmf3f::XDMF3File,newh5::String)
+	correct_time_steps!(xdmf3f)
 	for dataitem in xdmf3f.dataitems
 		con = dataitem.content[1]
 		dataitem.content[1] = replace(con, xdmf3f.h5file=>newh5)
