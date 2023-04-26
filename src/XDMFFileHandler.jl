@@ -75,8 +75,8 @@ end
 function XDMF3File(filename::String, overwrite=false)
 	_splitpath = splitpath(filename)
 	if length(_splitpath) > 1
-		path = joinpath([1:end-1])	
-		name = splitpath(filename)[end]
+		path = joinpath(_splitpath[1:end-1])	
+		name = _splitpath[end]
 	else
 		path = "./"
 		name = filename
