@@ -5,7 +5,9 @@ function create_and_update_hdf5!(xdmf3f::XDMF3File, newh5::String)
 	cp(_oldh5,_newh5)
 	fid = h5open(_newh5,"r+")
 	for (name,field) in zip(xdmf3f.idata.names,xdmf3f.idata.fields)
-		fid[joinpath(xdmf3f.h5path,name)] = field.dat
+		obj = joinpath(xdmf3f.h5path,name)
+		delete_object(f, obj)
+		write(fid, obj, field.dat)
 	end
 	close(fid)
 	return nothing
