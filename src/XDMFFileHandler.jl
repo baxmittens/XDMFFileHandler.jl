@@ -22,6 +22,7 @@ end
 
 struct XDMF3File
 	name::String
+	path::String
 	xmlfile::XMLFile
 	xmlroot::XMLElement
 	h5file::String
@@ -72,12 +73,14 @@ function extract_data(h5file::String, h5path::String)
 end
 
 function XDMF3File(filename::String, overwrite=false)
+	path = joinpath(splitpath(filename)[1:end-1])
+	name = splitpath(filename)[end]
 	xmlfile = read(XMLFile, filename)
 	xmlroot = xmlfile.element
 	dataitems = getElements(xmlroot,"DataItem")
 	h5file,h5path = getH5Pathes(xmlroot)
-	idata = extract_data(h5file, h5path)
-	return XDMF3File(filename,xmlfile, xmlroot, h5file, h5path, dataitems, idata, overwrite)
+	idata = extract_data(joinpath(path,h5file), h5path)
+	return XDMF3File(name, path, xmlfile, xmlroot, h5file, h5path, dataitems, idata, overwrite)
 end
 
 include("./XDMFFileHandler/utils.jl")

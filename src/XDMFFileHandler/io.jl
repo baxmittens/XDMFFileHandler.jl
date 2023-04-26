@@ -1,13 +1,9 @@
-function Base.write(xdmf3f::XDMF3File)
-	update_xml!(vtufile)
-	name = vtufile.name
-	if add_timestamp
-		splitstr = split(name,".vtu")
-		@assert length(splitstr) == 2 && isempty(splitstr[end])
-		name = splitstr[1] * "_" * timestamp() * ".vtu"
-	end
-	#f = open(name,"w")
-	#writeXMLElement(f,vtufile.xmlroot)
-	#close(f)
-	write(name, vtufile.xmlfile)
+function create_and_updata_hdf5!(xdmf3f)
+	
+end
+
+function Base.write(xdmf3f::XDMF3File, name::String)
+	update_or_create_hdf5!(xdmf3f)
+	update_xml!(xdmf3f)
+	write(xdmf3f.name, vtufile.xmlfile)
 end
