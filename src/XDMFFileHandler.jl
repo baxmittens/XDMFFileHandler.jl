@@ -17,7 +17,7 @@ end
 struct XDMFData
 	names::Vector{String}
 	fields::Vector{XDMFDataField}
-	XDMF3Data() = new(Vector{String}(), Vector{XDMFDataField}())
+	XDMFData() = new(Vector{String}(), Vector{XDMFDataField}())
 end
 
 struct XDMF3File
