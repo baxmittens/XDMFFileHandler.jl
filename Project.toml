@@ -14,4 +14,7 @@ HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 
 [compat]
+HDF5 = ">= 0.16"
+XMLParser = ">= 0.1."8
+AltInplaceOpsInterface = ">= 0.1.0"
 julia = "1"
