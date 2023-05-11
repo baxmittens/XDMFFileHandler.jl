@@ -3,6 +3,7 @@ function create_and_update_hdf5!(xdmf3f::XDMF3File, newh5::String, newpath::Stri
 	_oldh5 = joinpath(path,oldh5)
 	_newh5 = joinpath(newpath,newh5)
 	xdmf3f.path = newpath
+	xdmf3f.h5file = newh5
 	cp(_oldh5,_newh5)
 	fid = h5open(_newh5,"r+")
 	for (name,field) in zip(xdmf3f.idata.names,xdmf3f.idata.fields)
@@ -33,7 +34,6 @@ function update_xml!(xdmf3f::XDMF3File,newh5::String)
 		con = dataitem.content[1]
 		dataitem.content[1] = replace(con, xdmf3f.h5file=>newh5)
 	end
-	xdmf3f.h5file = newh5
 	return nothing
 end
 
