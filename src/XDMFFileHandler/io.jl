@@ -16,7 +16,7 @@ end
 
 function correct_time_steps!(xdmf::XDMF3File)
 	h5file,xmlroot,path = xdmf.h5file,xdmf.xmlroot,xdmf.path
-	_h5file = joinpath(path,newh5)
+	_h5file = joinpath(path,h5file)
 	fid = h5open(_h5file, "r")
 	times = read(fid, "times")
 	timeels = getElements(xmlroot, "Time")
