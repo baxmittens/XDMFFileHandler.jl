@@ -14,8 +14,9 @@ function create_and_update_hdf5!(xdmf3f::XDMF3File, newh5::String)
 end
 
 function correct_time_steps!(xdmf::XDMF3File)
-	h5file,xmlroot = xdmf.h5file,xdmf.xmlroot
-	fid = h5open(h5file, "r")
+	h5file,xmlroot,path = xdmf.h5file,xdmf.xmlroot,xdmf3f.path
+	_h5file = joinpath(path,newh5)
+	fid = h5open(_h5file, "r")
 	times = read(fid, "times")
 	timeels = getElements(xmlroot, "Time")
 	for (t,el) in zip(times,timeels)
@@ -35,10 +36,11 @@ function update_xml!(xdmf3f::XDMF3File,newh5::String)
 	return nothing
 end
 
-function Base.write(xdmf3f::XDMF3File, name::String)
+function Base.write(xdmf3f::XDMF3File, name::String, path="./")
 	@assert length(splitpath(name))==1 && split(name,".")[end] == "xdmf"
 	timest = timestamp()
 	newh5 = split(xdmf3f.h5file,".")[1]*timest*".h5"
+	xdmf3f.path = path
 	create_and_update_hdf5!(xdmf3f, newh5)
 	update_xml!(xdmf3f,newh5)
 	return write(joinpath(xdmf3f.path,name), xdmf3f.xmlfile)
