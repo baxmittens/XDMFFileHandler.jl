@@ -15,7 +15,7 @@ function create_and_update_hdf5!(xdmf3f::XDMF3File, newh5::String, newpath::Stri
 end
 
 function correct_time_steps!(xdmf::XDMF3File)
-	h5file,xmlroot,path = xdmf.h5file,xdmf.xmlroot,xdmf3f.path
+	h5file,xmlroot,path = xdmf.h5file,xdmf.xmlroot,xdmf.path
 	_h5file = joinpath(path,newh5)
 	fid = h5open(_h5file, "r")
 	times = read(fid, "times")
