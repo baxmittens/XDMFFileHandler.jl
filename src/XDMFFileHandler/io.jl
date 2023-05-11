@@ -1,7 +1,8 @@
-function create_and_update_hdf5!(xdmf3f::XDMF3File, newh5::String)
+function create_and_update_hdf5!(xdmf3f::XDMF3File, newh5::String, newpath::String)
 	path,oldh5 = xdmf3f.path,xdmf3f.h5file
 	_oldh5 = joinpath(path,oldh5)
-	_newh5 = joinpath(path,newh5)
+	_newh5 = joinpath(newpath,newh5)
+	xdmf3f.path = newpath
 	cp(_oldh5,_newh5)
 	fid = h5open(_newh5,"r+")
 	for (name,field) in zip(xdmf3f.idata.names,xdmf3f.idata.fields)
@@ -40,8 +41,7 @@ function Base.write(xdmf3f::XDMF3File, name::String, path="./")
 	@assert length(splitpath(name))==1 && split(name,".")[end] == "xdmf"
 	timest = timestamp()
 	newh5 = split(xdmf3f.h5file,".")[1]*timest*".h5"
-	xdmf3f.path = path
-	create_and_update_hdf5!(xdmf3f, newh5)
+	create_and_update_hdf5!(xdmf3f, newh5, path)
 	update_xml!(xdmf3f,newh5)
 	return write(joinpath(xdmf3f.path,name), xdmf3f.xmlfile)
 end
