@@ -83,7 +83,7 @@ include("./XDMFFileHandler/utils.jl")
 include("./XDMFFileHandler/math.jl")
 include("./XDMFFileHandler/io.jl")
 
-export XDMF3File, getH5Path
+export XDMF3File, getH5Path, XDMFData
 
 end #module
 
