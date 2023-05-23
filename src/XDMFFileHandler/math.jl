@@ -64,6 +64,10 @@ function norm(zd::XDMFDataField{T,N}) where {T,N}
 	return norm(zd.dat)
 end
 
+function norm(zd::XDMFDataField{T,N},p::Real) where {T,N}
+	return norm(zd.dat,p)
+end
+
 function add!(zd1::XDMFData, zd2::XDMFData)
 	for (dat1,dat2) in zip(zd1.fields,zd2.fields)
 		add!(dat1,dat2)
@@ -215,9 +219,9 @@ function ^(tpf::XDMFData, a::T) where T<:Number
 	return ret
 end
 
-function norm(dat::XDMFData)
+function norm(dat::XDMFData,p::Real)
 	interp_data = dat.fields
-	return max(map(x->norm(x),interp_data)...)
+	return norm(map(x->norm(x,p),interp_data),p)
 end
 
 function <=(zd1::XDMFData, zd2::XDMFData)
@@ -365,8 +369,8 @@ function ^(tpf::XDMF3File, a::T) where T<:Number
 	return ret
 end
 
-function norm(tpf::XDMF3File)
-	return norm(tpf.idata)
+function norm(tpf::XDMF3File,p::Real)
+	return norm(tpf.idata,p)
 end
 
 function <=(tpf1::XDMF3File, tpf2::XDMF3File)
