@@ -30,7 +30,7 @@ mutable struct XDMF3File
 	h5path::String
 	dataitems::Vector{XMLElement}
 	idata::XDMFData
-	udata::XDMF3Data
+	udata::XDMFData
 	overwrite::Bool
 end
 
