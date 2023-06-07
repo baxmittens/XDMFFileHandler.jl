@@ -93,7 +93,7 @@ function XDMF3File(filename::String, overwrite=false)
 	dataitems = getElements(xmlroot,"DataItem")
 	h5file,h5path = getH5Pathes(xmlroot)
 	idata = extract_idata(joinpath(path,h5file), h5path)
-	udata = extract_idata(joinpath(path,h5file), h5path)
+	udata = extract_udata(joinpath(path,h5file), h5path)
 	return XDMF3File(name, path, xmlfile, xmlroot, h5file, h5path, dataitems, idata, udata, overwrite)
 end
 
