@@ -8,7 +8,7 @@ import LinearAlgebra: mul!, norm
 import Base: +,-,*,/,^,<=
 import AltInplaceOpsInterface: add!, minus!, pow!, max!, min!
 
-#uncompress_keywords = ["geometry","topology","MaterialIDs"]
+uncompress_keywords = ["geometry","topology","MaterialIDs"]
 interpolation_keywords = ["displacement","epsilon","pressure_interpolated","sigma","temperature_interpolated"]
 
 struct XDMFDataField{T,N}
@@ -45,13 +45,30 @@ function getH5Pathes(xmlroot::XMLElement)
 	return h5file,h5path
 end
 
-function extract_data(h5file::String, h5path::String)
+function extract_idata(h5file::String, h5path::String)
 	fid = h5open(h5file, "r")
 	names = Vector{String}()
 	fields = Vector{XDMFDataField}()
 	allkeys = keys(fid[h5path])
 	idat = XDMFData()
 	for keyword in interpolation_keywords
+		if keyword ∈ allkeys
+			tmp = read(fid,h5path*keyword)
+			push!(idat.names,keyword)
+			push!(idat.fields,XDMFDataField(deepcopy(tmp)))
+		end
+	end
+	close(fid)
+	return idat
+end
+
+function extract_udata(h5file::String, h5path::String)
+	fid = h5open(h5file, "r")
+	names = Vector{String}()
+	fields = Vector{XDMFDataField}()
+	allkeys = keys(fid[h5path])
+	idat = XDMFData()
+	for keyword in uncompress_keywords
 		if keyword ∈ allkeys
 			tmp = read(fid,h5path*keyword)
 			push!(idat.names,keyword)
@@ -75,8 +92,9 @@ function XDMF3File(filename::String, overwrite=false)
 	xmlroot = xmlfile.element
 	dataitems = getElements(xmlroot,"DataItem")
 	h5file,h5path = getH5Pathes(xmlroot)
-	idata = extract_data(joinpath(path,h5file), h5path)
-	return XDMF3File(name, path, xmlfile, xmlroot, h5file, h5path, dataitems, idata, overwrite)
+	idata = extract_idata(joinpath(path,h5file), h5path)
+	udata = extract_idata(joinpath(path,h5file), h5path)
+	return XDMF3File(name, path, xmlfile, xmlroot, h5file, h5path, dataitems, idata, udata, overwrite)
 end
 
 include("./XDMFFileHandler/utils.jl")
