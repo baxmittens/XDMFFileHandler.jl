@@ -151,6 +151,7 @@ import Base: +,-,*,/,^
 
 function +(tpf1::XDMFData, tpf2::XDMFData)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	add!(ret,tpf1)
 	add!(ret,tpf2)
 	return ret
@@ -158,6 +159,7 @@ end
 
 function -(tpf1::XDMFData, tpf2::XDMFData)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	add!(ret,tpf1)
 	minus!(ret,tpf2)
 	return ret
@@ -165,18 +167,21 @@ end
 
 function *(tpf1::XDMFData, tpf2::XDMFData)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	mul!(ret,tpf1,tpf2)
 	return ret
 end
 
 function /(tpf1::XDMFData, tpf2::XDMFData)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	div!(ret,tpf1,tpf2)
 	return ret
 end
 
 function +(tpf::XDMFData, a::Number)
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	add!(ret,a)
 	return ret
@@ -185,6 +190,7 @@ end
 
 function -(tpf::XDMFData, a::T) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	add!(ret,-a)
 	return ret
@@ -192,6 +198,7 @@ end
 
 function -(a::T,tpf::XDMFData) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,a)
 	minus!(ret,tpf)
 	return ret
@@ -199,6 +206,7 @@ end
 
 function *(tpf::XDMFData, a::T) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	mul!(ret,a)
 	return ret
@@ -207,6 +215,7 @@ end
 
 function /(tpf::XDMFData, a::T) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	div!(ret,a)
 	return ret
@@ -214,6 +223,7 @@ end
 
 function ^(tpf::XDMFData, a::T) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	pow!(ret,a)
 	return ret
@@ -289,6 +299,7 @@ end
 
 function +(tpf1::XDMF3File, tpf2::XDMF3File)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	add!(ret,tpf1)
 	add!(ret,tpf2)
 	return ret
@@ -296,12 +307,14 @@ end
 
 function +(tpf1::XDMF3File)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	add!(ret,tpf1)
 	return ret
 end
 
 function -(tpf1::XDMF3File, tpf2::XDMF3File)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	add!(ret,tpf1)
 	minus!(ret,tpf2)
 	return ret
@@ -309,18 +322,21 @@ end
 
 function -(tpf1::XDMF3File)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	minus!(ret,tpf1)
 	return ret
 end
 
 function *(tpf1::XDMF3File, tpf2::XDMF3File)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	mul!(ret,tpf1,tpf2)
 	return ret
 end
 
 function +(tpf::XDMF3File, a::Number)
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	add!(ret,a)
 	return ret
@@ -329,6 +345,7 @@ end
 
 function -(tpf::XDMF3File, a::T) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	add!(ret,-a)
 	return ret
@@ -336,6 +353,7 @@ end
 
 function -(a::T,tpf::XDMF3File) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,a)
 	minus!(ret,tpf)
 	return ret
@@ -343,6 +361,7 @@ end
 
 function *(tpf::XDMF3File, a::T) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	mul!(ret,a)
 	return ret
@@ -351,6 +370,7 @@ end
 
 function /(tpf::XDMF3File, a::T) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	div!(ret,a)
 	return ret
@@ -358,12 +378,14 @@ end
 
 function /(tpf1::XDMF3File, tpf2::XDMF3File)
 	ret = similar(tpf1)
+	fill!(ret,0.0)
 	div!(ret,tpf1,tpf2)
 	return ret
 end
 
 function ^(tpf::XDMF3File, a::T) where T<:Number
 	ret = similar(tpf)
+	fill!(ret,0.0)
 	add!(ret,tpf)
 	pow!(ret,a)
 	return ret

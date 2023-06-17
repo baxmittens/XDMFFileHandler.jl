@@ -1,6 +1,9 @@
 using XDMFFileHandler
 
-filename = "../test/test_THM_Ansicht_II_T1_grob_quadratic.xdmf"
+#filename = "../test/test_THM_Ansicht_II_T1_grob_quadratic.xdmf"
+
+filename = "./julia/dev/XDMFFileHandler/test/test_THM_grobnetz_quadr.xdmf"
+
 xdmffile = XDMF3File(filename)
 
 newfile = xdmffile*xdmffile
@@ -13,8 +16,8 @@ combs = collect(combinations(1:4,3))
 
 faces = Vector{Vector{Int}}()
 
-for i in 1:8:length(top)
-	tet = top[i:i+3]
+for i in 1:11:length(top)
+	tet = top[i+1:i+4]
 	for comb in combs
 		push!(faces,tet[comb])
 	end
