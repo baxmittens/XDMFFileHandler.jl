@@ -100,6 +100,7 @@ end
 include("./XDMFFileHandler/utils.jl")
 include("./XDMFFileHandler/math.jl")
 include("./XDMFFileHandler/io.jl")
+include("./XDMFFileHandler/globaltolocal.jl")
 
 export XDMF3File, getH5Path, XDMFData
 
