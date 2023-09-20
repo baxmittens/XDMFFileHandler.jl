@@ -9,7 +9,7 @@ import Base: +,-,*,/,^,<=
 import AltInplaceOpsInterface: add!, minus!, pow!, max!, min!
 
 uncompress_keywords = ["geometry","topology","MaterialIDs"]
-interpolation_keywords = ["displacement","epsilon","pressure_interpolated","sigma","temperature_interpolated"]
+interpolation_keywords = ["displacement","epsilon","pressure_interpolated","sigma","temperature_interpolated","temperature"]
 
 struct XDMFDataField{T,N}
 	dat::Array{T,N}
