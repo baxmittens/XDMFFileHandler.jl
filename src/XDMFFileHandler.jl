@@ -1,6 +1,7 @@
 module XDMFFileHandler
 
 using XMLParser
+import XMLParser: XMLFile
 using HDF5
 
 import Dates
