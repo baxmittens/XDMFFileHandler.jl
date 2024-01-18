@@ -122,7 +122,7 @@ function add_nodal_scalar_field!(xdmf3f::XDMF3File, name::String, data)
 	#write(fid, obj, data)
 	#close(fid)
 	push!(grid.content, new_attr)
-	xdmf3f.dataitems = getElements(xmlroot,"DataItem")
+	xdmf3f.dataitems = getElements(xdmf3f.xmlroot,"DataItem")
 	@assert !(name ∈ xdmf3f.idata.names) "Name $name already exists in interpolation data"
 	push!(xdmf3f.idata.names,name)
 	push!(xdmf3f.idata.fields,XDMFDataField(data))
