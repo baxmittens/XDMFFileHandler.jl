@@ -90,3 +90,81 @@ end
 function Base.getindex(xdmf3f::XDMF3File, str::String)
 	return xdmf3f.idata[str]
 end
+
+function add_nodal_scalar_field!(xdmf3f::XDMF3File, name::String, data)
+	maingrid = getElements(xdmf3f.xmlroot,"Grid")
+	@assert length(maingrid) == 1
+	grid = first(getElements(first(maingrid),"Grid"))
+	allgridattr = getElements(grid,"Attribute")
+	filteredattributes = filter(x->hasAttributekey(x, "Name") && getAttribute(x, "Name")==name, allgridattr)
+	@assert isempty(filteredattributes) "field with name $name already exists!"
+	el_geometry = first(getElements(grid,"Geometry"))
+	new_attr = deepcopy(el_geometry)
+	new_attr.tag.name = "Attribute"
+	dataitem = new_attr.content[1]
+	dims_str = getAttribute(dataitem, "Dimensions")
+	firstdim_str = split(dims_str)[1]
+	firstdim_int = parse(Int,firstdim_str)
+	@assert length(data) == firstdim_int
+	dataitem.content[1] = replace(split(dataitem.content[1],"|")[1],"geometry"=>name)
+	setAttribute(dataitem,"Dimensions",firstdim_str)
+	new_attr.tag.attributes = XMLAttribute[
+		XMLAttribute("Center","Node"),
+		XMLAttribute("ElementCell",""),
+		XMLAttribute("ElementDegree","0"),
+		XMLAttribute("ElementFamily",""),
+		XMLAttribute("ItemType",""),
+		XMLAttribute("Name",name),
+		XMLAttribute("Type","None")
+	]
+	#fid = h5open(xdmf3f.h5file,"r+")
+	#obj = joinpath(xdmf3f.h5path,name)
+	#write(fid, obj, data)
+	#close(fid)
+	push!(grid.content, new_attr)
+	xdmf3f.dataitems = getElements(xmlroot,"DataItem")
+	@assert !(name ∈ xdmf3f.idata.names) "Name $name already exists in interpolation data"
+	push!(xdmf3f.idata.names,name)
+	push!(xdmf3f.idata.fields,XDMFDataField(data))
+	return nothing
+end
+
+function delete_field(xdmf3f::XDMF3File, fieldname::String)
+	return nothing
+end
+
+
+#templatefieldname = "temperature_interpolated"
+#newfieldname = "sobol_index"
+#filename="varval_in_temp.xdmf"
+#xmlfile = read(XMLFile, filename)
+#xmlroot = xmlfile.element
+#maingrid = getElements(xmlroot,"Grid")
+#@assert length(maingrid) == 1
+#grids = getElements(first(maingrid),"Grid")
+##for grid in grids
+#	grid = first(grids)
+#	attributes = getElements(grid,"Attribute")
+#	filteredattributes = filter(x->hasAttributekey(x, "Name") && getAttribute(x, "Name")==templatefieldname, attributes)
+#	@assert length(filteredattributes) == 1
+#	attribute = first(filteredattributes)
+#	newattr = deepcopy(attribute)
+#	setAttribute(newattr,"Name",newfieldname)
+#	newattr.content[1].content[1] = replace(newattr.content[1].content[1], templatefieldname=>newfieldname)
+#	splitnewattr = split(newattr.content[1].content[1],"|")
+#	splitnewattr[2]
+##end
+#
+#
+#
+#xdmf3f = XDMF3File(filename)
+##fid = h5open(xdmf3f.h5file,"r+")
+#dat = rand(1493,1)
+#name = "randomfield"
+#add_nodal_scalar_field!(xdmf3f, name, dat)
+#write(xdmf3f, "test.xdmf")
+#
+#fid = h5open(xdmf3f.h5file,"r+")
+#obj = joinpath(xdmf3f.h5path,name)
+#delete_object(fid, obj)
+#close(fid)
