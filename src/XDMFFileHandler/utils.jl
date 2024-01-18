@@ -157,12 +157,15 @@ end
 #
 #
 #
+
+#filename="varval_in_temp.xdmf"
 #xdmf3f = XDMF3File(filename)
 ##fid = h5open(xdmf3f.h5file,"r+")
 #dat = rand(1493,1)
 #name = "randomfield"
-#add_nodal_scalar_field!(xdmf3f, name, dat)
+#XDMFFileHandler.add_nodal_scalar_field!(xdmf3f, name, dat)
 #write(xdmf3f, "test.xdmf")
+
 #
 #fid = h5open(xdmf3f.h5file,"r+")
 #obj = joinpath(xdmf3f.h5path,name)
