@@ -6,7 +6,7 @@ function timestamp()
 end
 
 function rename!(xdmf3f::XDMF3File,name::String)
-	vtuf.name = name
+	xdmf3f.name = name
 	return nothing
 end
 
@@ -129,6 +129,46 @@ function add_nodal_scalar_field!(xdmf3f::XDMF3File, name::String, data)
 	return nothing
 end
 
+function add_cell_scalar_field!(xdmf3f::XDMF3File, name::String, data)
+	maingrid = getElements(xdmf3f.xmlroot,"Grid")
+	@assert length(maingrid) == 1
+	grid = first(getElements(first(maingrid),"Grid"))
+	allgridattr = getElements(grid,"Attribute")
+	filteredattributes = filter(x->hasAttributekey(x, "Name") && getAttribute(x, "Name")==name, allgridattr)
+	@assert isempty(filteredattributes) "field with name $name already exists!"
+	el_geometry = first(getElements(grid,"Geometry"))
+	new_attr = deepcopy(el_geometry)
+	new_attr.tag.name = "Attribute"
+	dataitem = new_attr.content[1]
+	dims_str = getAttribute(dataitem, "Dimensions")
+	firstdim_str = split(dims_str)[1]
+	firstdim_int = parse(Int,firstdim_str)
+	#@assert length(data) == firstdim_int
+	#dataitem.content[1] = replace(split(dataitem.content[1],"|")[1],"geometry"=>name)
+	dataitem.content[1] = joinpath(xdmf3f.h5file*":"*xdmf3f.h5path, name)*"|"*"0 0:1 1:1 $(length(data)):1 $(length(data))"
+
+	setAttribute(dataitem,"Dimensions",length(data))
+	new_attr.tag.attributes = XMLAttribute[
+		XMLAttribute("Center","Cell"),
+		XMLAttribute("ElementCell",""),
+		XMLAttribute("ElementDegree","0"),
+		XMLAttribute("ElementFamily",""),
+		XMLAttribute("ItemType",""),
+		XMLAttribute("Name",name),
+		XMLAttribute("Type","None")
+	]
+	#fid = h5open(xdmf3f.h5file,"r+")
+	#obj = joinpath(xdmf3f.h5path,name)
+	#write(fid, obj, data)
+	#close(fid)
+	push!(grid.content, new_attr)
+	xdmf3f.dataitems = getElements(xdmf3f.xmlroot,"DataItem")
+	@assert !(name ∈ xdmf3f.idata.names) "Name $name already exists in interpolation data"
+	push!(xdmf3f.idata.names,name)
+	push!(xdmf3f.idata.fields,XDMFDataField(data))
+	return nothing
+end
+
 function delete_field(xdmf3f::XDMF3File, fieldname::String)
 	return nothing
 end
@@ -158,10 +198,11 @@ end
 #
 #
 
+#using XDMFFileHandler
 #filename="varval_in_temp.xdmf"
 #xdmf3f = XDMF3File(filename)
 ##fid = h5open(xdmf3f.h5file,"r+")
-#dat = rand(1493,1)
+#dat = rand(1493)
 #name = "randomfield"
 #XDMFFileHandler.add_nodal_scalar_field!(xdmf3f, name, dat)
 #write(xdmf3f, "test.xdmf")

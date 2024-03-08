@@ -78,6 +78,12 @@ function PointInTri3(pt::AbstractArray, v1::AbstractArray, v2::AbstractArray, v3
     return !(has_neg && has_pos)
 end
 
+function Tri3_area(v1::AbstractArray, v2::AbstractArray, v3::AbstractArray)
+        #trianle in xy-plane, see https://en.wikipedia.org/wiki/Area_of_a_triangle for general formula
+        @assert (length(v1)==2 && length(v1)==2 && length(v1)==2) || (length(v1)==3 && length(v1)==3 && length(v1)==3 && isapprox(v1[3],0.0,atol=1e-10) && isapprox(v2[3],0.0,atol=1e-10) && isapprox(v3[3],0.0,atol=1e-10))
+        return 0.5 * abs( (v1[1]-v3[1])*(v2[2]-v1[2])-(v1[1]-v2[1])*(v3[2]-v1[2]) )
+end
+
 function globalToLocal(xPt::Array{Float64,1}, nodalX::Array{Float64,2}, shapeFun::T1, shapeFunDeriv::T2, checkInHullConstraint::T3, tol::Float64=1e-13, verbose::Bool=false) where {T1<:Function,T2<:Function,T3<:Function}
         tnodalX = nodalX'
         ec = globalToLocalGuess(xPt, tnodalX)
