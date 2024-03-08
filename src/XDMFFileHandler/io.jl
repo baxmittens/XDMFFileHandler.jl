@@ -1,9 +1,9 @@
-function create_and_update_hdf5!(xdmf3f::XDMF3File, newh5::String, newpath::String)
+function create_and_update_hdf5!(xdmf3f::XDMF3File, newh5::String, newpath::String, force=false)
 	path,oldh5 = xdmf3f.path,xdmf3f.h5file
 	_oldh5 = joinpath(path,oldh5)
 	_newh5 = joinpath(newpath,newh5)
 	xdmf3f.path = newpath
-	cp(_oldh5,_newh5)
+	cp(_oldh5,_newh5, force=force)
 	fid = h5open(_newh5,"r+")
 	fidkeys = keys(fid[xdmf3f.h5path])
 	for (name,field) in zip(xdmf3f.idata.names,xdmf3f.idata.fields)
@@ -60,6 +60,6 @@ end
 function Base.write(xdmf3f::XDMF3File, name::String, newh5::String, path="./")
 	@assert length(splitpath(name))==1 && split(name,".")[end] == "xdmf" "$name must end with .xdmf and is not allowed to contain `/`. Path can be specified by optional argument `write(xdmf3f::XDMF3File, name::String, write_timest::Bool, path::String)`"
 	@assert split(newh5,".")[end] == "h5" "$newh5 must end wit .h5"
-	create_and_update_hdf5!(xdmf3f, newh5, path)
+	create_and_update_hdf5!(xdmf3f, newh5, path, true)
 	return write(joinpath(xdmf3f.path,name), xdmf3f.xmlfile)
 end
