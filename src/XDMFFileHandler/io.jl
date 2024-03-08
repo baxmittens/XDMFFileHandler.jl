@@ -44,10 +44,14 @@ function update_xml!(xdmf3f::XDMF3File,newh5::String)
 	return nothing
 end
 
-function Base.write(xdmf3f::XDMF3File, name::String, path="./")
+function Base.write(xdmf3f::XDMF3File, name::String, write_timest=true, path="./")
 	@assert length(splitpath(name))==1 && split(name,".")[end] == "xdmf"
-	timest = timestamp()
-	newh5 = split(xdmf3f.h5file,".")[1]*timest*".h5"
+	if write_timest
+		timest = timestamp()
+		newh5 = split(xdmf3f.h5file,".")[1]*timest*".h5"
+	else
+		newh5 = split(xdmf3f.h5file,".")[1]*".h5"
+	end
 	create_and_update_hdf5!(xdmf3f, newh5, path)
 	#update_xml!(xdmf3f,newh5)
 	return write(joinpath(xdmf3f.path,name), xdmf3f.xmlfile)
