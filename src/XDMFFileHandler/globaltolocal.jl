@@ -63,6 +63,12 @@ function Tri3_checkInHullConstraint(ec::Array{Float64,1})
         end
 end
 
+function Tri3_area_XY_plane(v1::AbstractArray, v2::AbstractArray, v3::AbstractArray)
+        #trianle in xy-plane, see https://en.wikipedia.org/wiki/Area_of_a_triangle for general formula
+        @assert (length(v1)==2 && length(v1)==2 && length(v1)==2) || (length(v1)==3 && length(v1)==3 && length(v1)==3 && isapprox(v1[3],0.0,atol=1e-10) && isapprox(v2[3],0.0,atol=1e-10) && isapprox(v3[3],0.0,atol=1e-10))
+        return 0.5 * abs( (v1[1]-v3[1])*(v2[2]-v1[2])-(v1[1]-v2[1])*(v3[2]-v1[2]) )
+end
+
 function _sign(p1::AbstractArray, p2::AbstractArray, p3::AbstractArray)
     return (p1[1] - p3[1]) * (p2[2] - p3[2]) - (p2[1] - p3[1]) * (p1[2] - p3[2]);
 end
