@@ -44,8 +44,8 @@ function update_xml!(xdmf3f::XDMF3File,newh5::String)
 	return nothing
 end
 
-function Base.write(xdmf3f::XDMF3File, name::String, write_timest=true, path="./")
-	@assert length(splitpath(name))==1 && split(name,".")[end] == "xdmf"
+function Base.write(xdmf3f::XDMF3File, name::String, write_timest::Bool=true, path::String="./")
+	@assert length(splitpath(name))==1 && split(name,".")[end] == "xdmf" "Name must end with .xdmf and is not allowed to contain `/`. Path can be specified by optional argument `write(xdmf3f::XDMF3File, name::String, write_timest::Bool, path::String)`"
 	if write_timest
 		timest = timestamp()
 		newh5 = split(xdmf3f.h5file,".")[1]*timest*".h5"
@@ -54,5 +54,12 @@ function Base.write(xdmf3f::XDMF3File, name::String, write_timest=true, path="./
 	end
 	create_and_update_hdf5!(xdmf3f, newh5, path)
 	#update_xml!(xdmf3f,newh5)
+	return write(joinpath(xdmf3f.path,name), xdmf3f.xmlfile)
+end
+
+function Base.write(xdmf3f::XDMF3File, name::String, newh5::String, path="./")
+	@assert length(splitpath(name))==1 && split(name,".")[end] == "xdmf" "$name must end with .xdmf and is not allowed to contain `/`. Path can be specified by optional argument `write(xdmf3f::XDMF3File, name::String, write_timest::Bool, path::String)`"
+	@assert split(newh5,".")[end] == "h5" "$newh5 must end wit .h5"
+	create_and_update_hdf5!(xdmf3f, newh5, path)
 	return write(joinpath(xdmf3f.path,name), xdmf3f.xmlfile)
 end
