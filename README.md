@@ -22,6 +22,7 @@ The idea of this project is not to create xdmf files from scratch. Instead, it i
 Not all xdmf data is loaded by default. There is data that is only uncompressed but not affected from arithmetic operations. This data is stored in `XDMFFileHandler.uncompress_keywords`. Field names stored in `XDMFFileHandler.interpolation_keywords` are uncompress and affected by arithmetic operations
 
 ```julia
+using XDMFFileHandler
 # set keywords
 XDMFFileHandler.uncompress_keywords = ["geometry","topology","MaterialIDs"]
 XDMFFileHandler.interpolation_keywords = ["displacement","epsilon","pressure_interpolated","sigma","temperature_interpolated","temperature"]
