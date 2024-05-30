@@ -49,8 +49,9 @@ xdmf += 1.0
 
 ### Write to file
 
-For file writing, a xdmf file path and a h5 file path has to be specified. Be careful not to overwrite your original data!
-
+For file writing, a xdmf file path `xdmf_filename` and a h5 file path `h5_filename` has to be specified. 
 ```julia
-write(xdmf, "extended_postproc.xdmf", "extended_postproc.h5")
+# write(xdmf::XDMF3File, xdmf_filename::String, h5_filename::String, write_directory::String="./")
+write(xdmf, "extended_postproc.xdmf", "extended_postproc.h5", write_directory)
 ```
+It is not allowed to use `/` in `xdmf_filename` and `h5_filename`. Instead you can provide a `path/to/directory` as optional argument `write_directory`. Be careful not to overwrite your original data!
