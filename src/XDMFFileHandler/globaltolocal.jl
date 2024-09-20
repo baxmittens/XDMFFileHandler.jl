@@ -22,27 +22,51 @@ function Tri3_shapeFunDeriv(ec::AbstractArray)
         return dN
 end
 
-function Tri6_shapeFun(ec::AbstractArray)
-        N =  SMatrix{6,1,Float64,6}(
-            (1.0-ec[1]-ec[2])*(1-2*ec[1]-2*ec[2]), 
-            ec[1]*(2*ec[1]-1), 
-            ec[2]*(2*ec[2]-1),
-            4*ec[1]*(1.0-ec[1]-ec[2]),
-            4*ec[1]*ec[2],
-            4*ec[2]*(1.0-ec[1]-ec[2])
-            )
+#function Tri6_shapeFun(ec::AbstractArray)
+function Tri6_shapeFun(r::AbstractArray)
+        #N =  SMatrix{6,1,Float64,6}(
+        #    (1.0-ec[1]-ec[2])*(1-2*ec[1]-2*ec[2]), 
+        #    ec[1]*(2*ec[1]-1), 
+        #    ec[2]*(2*ec[2]-1),
+        #    4*ec[1]*(1.0-ec[1]-ec[2]),
+        #    4*ec[1]*ec[2],
+        #    4*ec[2]*(1.0-ec[1]-ec[2])
+        #    )
+        N = SMatrix{6,1,Float64,6}(
+                2. * (1. - r[1] - r[2]) * (0.5 - r[1] - r[2]),
+                r[1] * (2. * r[1] - 1.),
+                r[2] * (2. * r[2] - 1.),
+                4. * r[1] * (1. - r[1] - r[2]),
+                4. * r[1] * r[2],
+                4. * r[2] * (1. - r[1] - r[2]),
+                )
         return N
 end
 
-function Tri6_shapeFunDeriv(ec::AbstractArray)
-        dN = SMatrix{3,2,Float64,6}(
-            4*ec[1]+4*ec[2]-3., 4*ec[1]+4*ec[2]-3, 
-            4*ec[1]-1, 0.,
-            0.,  4*ec[2]-1,
-            -4*(2*ec[1]+ec[2]-1), -4*ec[1],
-            4*ec[2], 4*[1],
-            -4*ec[2], -4(ec[1]+2*ec[2]-1)
-            )
+#function Tri6_shapeFunDeriv(ec::AbstractArray)
+function Tri6_shapeFunDeriv(r::AbstractArray)
+        #dN = SMatrix{6,2,Float64,12}(
+        #    4*ec[1]+4*ec[2]-3., 4*ec[1]+4*ec[2]-3, 
+        #    4*ec[1]-1, 0.,
+        #    0.,  4*ec[2]-1,
+        #    -4*(2*ec[1]+ec[2]-1), -4*ec[1],
+        #    4*ec[2], 4*ec[1],
+        #    -4*ec[2], -4(ec[1]+2*ec[2]-1)
+        #    )
+        dN = SMatrix{6,2,Float64,12}(
+               4. * (r[1] + r[2]) - 3.,
+               4. * r[1] - 1.,
+               0.0,
+               4. * (1 - 2. * r[1] - r[2]),
+               4. * r[2],
+               -4. * r[2],
+               4. * (r[1] + r[2]) - 3.,
+               0.0,
+               4. * r[2] - 1.,
+               -4. * r[1],
+               4. * r[1],
+               4. * (1 - r[1] - 2. * r[2])
+                )
         return dN
 end
 
