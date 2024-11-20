@@ -46,6 +46,13 @@ function div!(zd1::XDMFDataField{T,N}, a::Number) where {T,N}
 	return nothing
 end
 
+function div!(zd1::XDMFDataField{T,N}, zd2::XDMFDataField{T,N}, zd3::XDMFDataField{T,N}) where {T,N}
+	@inbounds for i in 1:length(zd1.dat)
+		zd1.dat[i] = zd2.dat[i] / zd3.dat[i]
+	end
+	return nothing
+end
+
 function max!(zd1::XDMFDataField{T,N}, zd2::XDMFDataField{T,N}) where {T,N}
 	@inbounds for i in 1:length(zd1.dat)
 		zd1.dat[i] = max(zd1.dat[i],zd2.dat[i])
