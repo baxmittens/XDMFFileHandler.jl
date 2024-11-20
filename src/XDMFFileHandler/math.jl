@@ -292,6 +292,11 @@ function div!(zd1::XDMF3File, zd2::XDMF3File, zd3::XDMF3File)
 	return nothing
 end
 
+function div!(zd1::XDMF3File, zd2::XDMF3File)
+	div!(zd1.idata, zd1.idata, zd2.idata)
+	return nothing
+end
+
 function max!(zd1::XDMF3File, zd2::XDMF3File)
 	max!(zd1.idata, zd2.idata)
 	return nothing
