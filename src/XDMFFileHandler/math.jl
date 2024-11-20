@@ -267,6 +267,11 @@ function mul!(zd1::XDMF3File, zd2::XDMF3File, zd3::XDMF3File)
 	return nothing
 end
 
+function mul!(zd1::XDMF3File, zd2::XDMF3File)
+	mul!(zd1.idata, zd1.idata, zd2.idata)
+	return nothing
+end
+
 function mul!(zd1::XDMF3File, zd2::XDMF3File, fac::Float64)
 	mul!(zd1.idata, zd2.idata, fac)
 	return nothing

@@ -32,7 +32,7 @@ mutable struct XDMF3File
 	dataitems::Vector{XMLElement}
 	idata::XDMFData
 	udata::XDMFData
-	overwrite::Bool
+	extract_all::Bool
 end
 
 function getH5Pathes(xmlroot::XMLElement)
@@ -46,19 +46,26 @@ function getH5Pathes(xmlroot::XMLElement)
 	return h5file,h5path
 end
 
-function extract_idata(h5file::String, h5path::String)
+function extract_idata(h5file::String, h5path::String, extract_all::Bool)
 	fid = h5open(h5file, "r")
 	names = Vector{String}()
 	fields = Vector{XDMFDataField}()
 	allkeys = keys(fid[h5path])
 	idat = XDMFData()
-	for keyword in interpolation_keywords
-		if keyword ∈ allkeys
+	for keyword in allkeys
+		if keyword ∈ interpolation_keywords || (extract_all && keyword ∉ uncompress_keywords)
 			tmp = read(fid,h5path*keyword)
 			push!(idat.names,keyword)
 			push!(idat.fields,XDMFDataField(deepcopy(tmp)))
 		end
 	end
+	#for keyword in interpolation_keywords
+	#	if keyword ∈ allkeys
+	#		tmp = read(fid,h5path*keyword)
+	#		push!(idat.names,keyword)
+	#		push!(idat.fields,XDMFDataField(deepcopy(tmp)))
+	#	end
+	#end
 	close(fid)
 	return idat
 end
@@ -80,7 +87,7 @@ function extract_udata(h5file::String, h5path::String)
 	return idat
 end
 
-function XDMF3File(filename::String, overwrite=false)
+function XDMF3File(filename::String, extract_all::Bool=false)
 	_splitpath = splitpath(filename)
 	if length(_splitpath) > 1
 		path = joinpath(_splitpath[1:end-1])	
@@ -93,9 +100,9 @@ function XDMF3File(filename::String, overwrite=false)
 	xmlroot = xmlfile.element
 	dataitems = getElements(xmlroot,"DataItem")
 	h5file,h5path = getH5Pathes(xmlroot)
-	idata = extract_idata(joinpath(path,h5file), h5path)
+	idata = extract_idata(joinpath(path,h5file), h5path, extract_all)
 	udata = extract_udata(joinpath(path,h5file), h5path)
-	return XDMF3File(name, path, xmlfile, xmlroot, h5file, h5path, dataitems, idata, udata, overwrite)
+	return XDMF3File(name, path, xmlfile, xmlroot, h5file, h5path, dataitems, idata, udata, extract_all)
 end
 
 include("./XDMFFileHandler/utils.jl")
